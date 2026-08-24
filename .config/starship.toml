@@ -1,0 +1,112 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[](fg:#1C1E25)\
+$os\
+$username\
+$hostname\
+[](fg:#1C1E25 bg:#22262D)\
+$directory\
+[](fg:#22262D bg:#1C1E25)\
+$git_branch\
+$git_status\
+[](fg:#1C1E25)\
+$time\
+$cmd_duration\
+$character"""
+
+add_newline = false
+
+# ── OS ────────────────────────────────────────
+
+[os]
+disabled = false
+style = "fg:#C4B28A bg:#1C1E25"
+format = "[ $symbol ]($style)"
+
+[os.symbols]
+Arch = ""
+Ubuntu = ""
+Debian = ""
+Fedora = ""
+Windows = "󰍲"
+Macos = ""
+Linux = ""
+
+# ── User / Host ───────────────────────────────
+
+[username]
+show_always = true
+style_user = "fg:#8BA4B0 bg:#1C1E25"
+style_root = "fg:#C4746E bg:#1C1E25"
+format = "[$user]($style)"
+
+[hostname]
+ssh_only = false
+style = "fg:#658594 bg:#1C1E25"
+format = "[@$hostname ]($style)"
+
+# ── Directory ─────────────────────────────────
+
+[directory]
+style = "fg:#DCA561 bg:#22262D"
+format = "[   $path ]($style)"
+truncation_length = 4
+truncate_to_repo = false
+home_symbol = "~"
+read_only = " 󰌾"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Projects" = "󰲋 "
+
+# ── Git ───────────────────────────────────────
+
+[git_branch]
+symbol = "󰊢 "
+style = "fg:#938AA9 bg:#1C1E25"
+format = "[ $symbol$branch]($style)"
+
+[git_status]
+style = "fg:#B6927B bg:#1C1E25"
+format = "[$all_status$ahead_behind ]($style)"
+
+conflicted = "=${count} "
+ahead = "⇡${count} "
+behind = "⇣${count} "
+diverged = "⇕⇡${ahead_count}⇣${behind_count} "
+untracked = "?${count} "
+stashed = "*${count} "
+modified = "~${count} "
+staged = "+${count} "
+renamed = "»${count} "
+deleted = "✘${count} "
+
+# ── Time ──────────────────────────────────────
+
+[time]
+disabled = false
+time_format = "%H:%M"
+style = "fg:#909398"
+format = "[  󰥔 $time]($style)"
+
+# ── Previous command duration ─────────────────
+
+[cmd_duration]
+min_time = 0
+show_milliseconds = true
+style = "fg:#8EA4A2"
+format = "[  󰔛 $duration]($style)"
+
+# ── Prompt ────────────────────────────────────
+
+[character]
+success_symbol = "[  ❯](bold fg:#8A9A7B)"
+error_symbol = "[  ❯](bold fg:#C4746E)"
+vimcmd_symbol = "[  ❮](bold fg:#938AA9)"
+vimcmd_replace_one_symbol = "[  ❮](bold fg:#B6927B)"
+vimcmd_replace_symbol = "[  ❮](bold fg:#B6927B)"
+vimcmd_visual_symbol = "[  ❮](bold fg:#C4B28A)"
