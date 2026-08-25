@@ -24,6 +24,8 @@ setopt AUTO_CD
 setopt INTERACTIVE_COMMENTS
 setopt CORRECT
 
+export PATH="/home/friesent/.local/bin:$PATH"
+
 # ─────────────────────────────────────────────────────────────
 # Completion
 # ─────────────────────────────────────────────────────────────
@@ -109,11 +111,13 @@ alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 # ─────────────────────────────────────────────────────────────
 
 if [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
+    # Arch
     source /usr/share/fzf/key-bindings.zsh
-fi
-
-if [[ -f /usr/share/fzf/completion.zsh ]]; then
     source /usr/share/fzf/completion.zsh
+elif [[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]]; then
+    # Debian / Ubuntu
+    source /usr/share/doc/fzf/examples/key-bindings.zsh
+    source /usr/share/doc/fzf/examples/completion.zsh
 fi
 
 # ─────────────────────────────────────────────────────────────
