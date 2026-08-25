@@ -84,6 +84,13 @@ install_ubuntu() {
     mkdir -p "$HOME/.local/bin"
     ln -sf "$(command -v fdfind)" "$HOME/.local/bin/fd"
   fi
+
+  if ! command -v fd >/dev/null 2>&1 && command -v fdfind >/dev/null 2>&1; then
+    mkdir -p "$HOME/.local/bin"
+    ln -sf "$(command -v fdfind)" "$HOME/.local/bin/fd"
+
+    export PATH="$HOME/.local/bin:$PATH"
+  fi
 }
 
 fix_zsh_symlink() {
@@ -125,26 +132,42 @@ set_default_shell() {
 verify() {
   info "Verifying tools"
 
-  local tools=(
-    git
-    zsh
-    nvim
-    starship
-    zoxide
-    rg
-    fd
-    fzf
-  )
+  local failed=0
 
-  for tool in "${tools[@]}"; do
-    if command -v "$tool" >/dev/null 2>&1; then
-      printf '  ✓ %s\n' "$tool"
-    else
-      printf '  ✗ %s\n' "$tool"
-    fi
-  done
+  check_tool() {
+    local name="$1"
+    shift
 
-  printf '\n.zshrc -> %s\n' "$(readlink "$HOME/.zshrc")"
+    for command_name in "$@"; do
+      if command -v "$command_name" >/dev/null 2>&1; then
+        printf '  ✓ %s (%s)\n' "$name" "$(command -v "$command_name")"
+        return
+      fi
+    done
+
+    printf '  ✗ %s\n' "$name"
+    failed=1
+  }
+
+  check_tool "git" git
+  check_tool "zsh" zsh
+  check_tool "nvim" nvim
+  check_tool "starship" starship
+  check_tool "zoxide" zoxide
+  check_tool "ripgrep" rg
+  check_tool "fd" fd fdfind
+  check_tool "fzf" fzf
+
+  if [[ -L "$HOME/.zshrc" ]]; then
+    printf '  ✓ ~/.zshrc -> %s\n' "$(readlink "$HOME/.zshrc")"
+  else
+    printf '  ✗ ~/.zshrc is not a symlink\n'
+    failed=1
+  fi
+
+  if [[ $failed -ne 0 ]]; then
+    warn "Setup completed, but some checks failed."
+  fi
 }
 
 case "$DISTRO" in
